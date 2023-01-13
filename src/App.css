@@ -141,3 +141,37 @@ html, body {
   padding: 6px;
 
 }
+
+#search-bar {
+  top: 20px;
+  background-color: azure;
+  width: 360px;
+  height: 40px;
+  border-radius: 23px;
+  border: none;
+  position: fixed;
+  margin-left: 50px;
+}
+
+#search img {
+  position: absolute;
+  left: 5px;
+  top: 5px;
+}
+
+#search-bar input {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  height: 100%;
+  margin-left: 40px;
+  font-weight: bold;
+  width: 83%;
+}
+
+.search-results {
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
