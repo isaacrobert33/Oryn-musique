@@ -97,7 +97,7 @@ function App() {
           
             <ul>
               <li>
-                <Link className="tabs" to="/home">
+                <Link className="tabs" to="/">
                   <span>  
                     <img src={home_icon} alt={"home"}></img>
                   </span>
@@ -134,7 +134,6 @@ function App() {
                 <Link className="tabs" to="/artists">
                   Artists
                 </Link>
-                
               </li>
             </ul>
           </div>
