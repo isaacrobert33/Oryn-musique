@@ -19,6 +19,7 @@ import search_icon from './assets/search-icon.svg';
 import playlist_icon from './assets/playlist.svg';
 import album_icon from './assets/album.svg';
 import oryn from './assets/oryn.svg';
+import user_icon from './assets/user.svg';
 
 function App() {
     const CLIENT_ID = "f8453497694c4440b8458f0182f51618"
@@ -28,7 +29,8 @@ function App() {
 
     const [token, setToken] = useState("")
     const [searchKey, setSearchKey] = useState("")
-    const [artists, setArtists] = useState([])
+    const [artists, setArtists] = useState([]);
+    const [userData, setUserData] = useState(null);
 
     // const getToken = () => {
     //     let urlParams = new URLSearchParams(window.location.hash.replace("#","?"));
@@ -38,7 +40,8 @@ function App() {
     useEffect(() => {
         const hash = window.location.hash
         let token = window.localStorage.getItem("token")
-
+        console.log(token);
+        console.log(userData);
         // getToken()
 
 
@@ -48,15 +51,37 @@ function App() {
             window.location.hash = ""
             window.localStorage.setItem("token", token)
         }
-
-        setToken(token)
+        getUserData(token);
+        setToken(token);
 
     }, [])
+    var logoutShowed = false;
+    function showLogout() {
+      if (!logoutShowed) {
+        document.getElementById("logout").style.display = "block";
+        logoutShowed = true;
+      } else {
+        document.getElementById("logout").style.display = "none";
+        logoutShowed = false;
+      }
+      
+    }
 
     const logout = () => {
         setToken("")
         window.localStorage.removeItem("token")
     }
+
+    const getUserData = async (token) => {
+      console.log(token, "User data")
+    
+      const {data} = await axios.get("https://api.spotify.com/v1/me", {
+        headers: {Authorization: `Bearer ${token}`}
+      })
+      console.log(data);
+      setUserData(data);
+    }
+      
 
     const searchArtists = async (e) => {
         e.preventDefault()
@@ -85,6 +110,25 @@ function App() {
     return (
       <Router>
         <div className="App">
+          <div className='user'>
+            {
+              userData ? (
+                <a onClick={showLogout}>
+                  <img className="user-img" width={"32px"} height={"32px"} src={userData.images[0].url} alt='user' /> 
+                  <b>
+                    {userData.display_name}
+                  </b>
+                  <span id="logout" onClick={logout}>Logout</span>
+                </a>
+              ) : (
+                <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=user-library-read`}>
+                  <img id="no-user-img" className="user-img" width={"32px"} height={"32px"} src={user_icon} alt='user' /> 
+                  <b>Sign in</b>
+                </a>
+                
+              )
+            }
+          </div>
           <div className="sidebar">
             <div className="oryn">
               <Link className={"oryn-link"} to="/">
@@ -138,7 +182,7 @@ function App() {
             </ul>
           </div>
           <Routes>
-            <Route exact path='/' element={<Home/>}></Route>
+            <Route exact path='/' element={<Home token={token}/>}></Route>
             <Route exact path='/search' element={<Search/>}></Route>
             <Route exact path='/playlists' element={<Playlist/>}></Route>
             <Route exact path='/albums' element={<Albums/>}></Route>
