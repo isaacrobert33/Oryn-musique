@@ -1,3 +1,4 @@
 # oryn-svelte
 <img src="./src/assets/oryn.svg" />
-A river that flows unstoppably of melodies
+
+> _A river that flows unstoppably of melodies_
