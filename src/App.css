@@ -119,6 +119,27 @@ html, body {
   transition: .2s padding ease-out;
 }
 
+.music-card {
+  border-radius: 10px;
+  width: 200px;
+  height: 270px;
+  background-color: rgba(53, 57, 61, 0.6);
+  background-blend-mode: lighten;
+  padding: 10px;
+  margin: 15px;
+  transition: .2s padding ease-out;
+}
+
+.music-card:hover {
+  padding: 15px;
+  box-shadow: 2px 1px 7px 4px rgba(20, 20, 20, 0.6);
+}
+
+.music-card img {
+  border-radius: 10px;
+  border-bottom: #f88d0e 6px solid;
+}
+
 .album:hover {
   padding: 15px;
   box-shadow: 2px 1px 7px 4px rgba(20, 20, 20, 0.6);
@@ -147,7 +168,9 @@ html, body {
   padding: 6px;
 
 }
-
+#search {
+  margin-top: 5%;
+}
 #search-bar {
   top: 20px;
   background-color: azure;
@@ -157,9 +180,10 @@ html, body {
   border: none;
   position: fixed;
   margin-left: 50px;
+  box-shadow: 0px 2px 8px 3px rgba(20, 20, 20, 0.6);
 }
 
-#search img {
+#search #search-icon {
   position: absolute;
   left: 5px;
   top: 5px;
