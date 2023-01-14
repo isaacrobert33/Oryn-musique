@@ -2,24 +2,17 @@ import axios from 'axios';
 import React from 'react';
 import { useState } from 'react';
 import search_icon from './assets/search-noir.svg';
-
-const Card = ({name, artists, link, cover_art}) => {
-
-    return (
-        <div className='music-card'>
-
-        </div>
-    )
-}
+import DisplayCard from './DisplayCard';
 
 const Search = () => {
     const [results, setResults] = useState([]);
     const [searchKeyword, setKeyword] = useState("");
 
     const Search = async () => {
+        let token = window.localStorage.getItem("token");
         const {data} = axios.get("https://api.spotify.com/v1/search", {
             headers: {
-                Auth,orization: `Bearers ${token}`
+                Authorization: `Bearers ${token}`
             },
             params: {
                 type: "track",
@@ -40,7 +33,7 @@ const Search = () => {
                     results?.length > 0 ? (
                         results.map(
                             (res) => (
-                                <Card />
+                                <DisplayCard />
                             )
                         )
                         

@@ -1,5 +1,7 @@
 html, body {
-  background-color: #232528;
+  background: linear-gradient(180deg, #f88d0e 10%, #232528 90%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   margin: 0;
   padding: 0;
   height: 100%;
@@ -16,12 +18,14 @@ html, body {
   border-right: 2px solid grey;
   padding-top: 50px;
   display: inline-block;
-  /* float: left; */
+  position: fixed;
 }
 
 .screen {
   display: inline-block;
   color: azure;
+  position: absolute;
+  margin-left: 24%;
 }
 
 .sidebar ul li {
@@ -69,9 +73,10 @@ html, body {
   /* margin-top: 60px; */
 }
 
-.recents {
+.container {
   display: flex;
   flex-wrap: wrap;
+  margin-top: 10%;
 }
 
 .user {
@@ -107,10 +112,11 @@ html, body {
   border-radius: 10px;
   width: 200px;
   height: 270px;
-  background-color: #35393d;
+  background-color: rgba(53, 57, 61, 0.6);
+  background-blend-mode: lighten;
   padding: 10px;
   margin: 15px;
-  transition: .3s padding ease-in-out;
+  transition: .2s padding ease-out;
 }
 
 .album:hover {
@@ -174,4 +180,3 @@ html, body {
   flex-wrap: wrap;
   text-align: center;
 }
-

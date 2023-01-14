@@ -8,11 +8,11 @@ import {
 import './App.css';
 import axios from 'axios';
 
-import Home from './Home';
-import Search from "./Search";
-import Playlist from "./Playlist";
-import Albums from "./Albums";
-import Artists from "./Artists";
+import Home from './components/Home';
+import Search from "./components/Search";
+import Playlist from "./components/Playlist";
+import Albums from "./components/Albums";
+import Artists from "./components/Artists";
 
 import home_icon from './assets/home.svg';
 import search_icon from './assets/search-icon.svg';
@@ -37,24 +37,6 @@ function App() {
     //     let token = urlParams.get('access_token');
     // }
 
-    useEffect(() => {
-        const hash = window.location.hash
-        let token = window.localStorage.getItem("token")
-        console.log(token);
-        console.log(userData);
-        // getToken()
-
-
-        if (!token && hash) {
-            token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1]
-
-            window.location.hash = ""
-            window.localStorage.setItem("token", token)
-        }
-        getUserData(token);
-        setToken(token);
-
-    }, [])
     var logoutShowed = false;
     function showLogout() {
       if (!logoutShowed) {
@@ -73,13 +55,19 @@ function App() {
     }
 
     const getUserData = async (token) => {
-      console.log(token, "User data")
-    
-      const {data} = await axios.get("https://api.spotify.com/v1/me", {
-        headers: {Authorization: `Bearer ${token}`}
-      })
-      console.log(data);
-      setUserData(data);
+      let response;
+      try {
+        response = await axios.get("https://api.spotify.com/v1/me", {
+          headers: {Authorization: `Bearer ${token}`}
+        })
+      } catch (error) {
+        console.log("axios error", error);
+        logout();
+        return;
+      }
+      
+      console.log("status", response.data);
+      setUserData(response.data);
     }
       
 
@@ -106,6 +94,26 @@ function App() {
             </div>
         ))
     }
+
+    useEffect(() => {
+        const hash = window.location.hash
+        let token = window.localStorage.getItem("token");
+        console.log(token);
+        console.log(userData);
+        // getToken()
+
+
+        if (!token && hash) {
+            token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1]
+
+            window.location.hash = ""
+            window.localStorage.setItem("token", token)
+        }
+        getUserData(token);
+        setToken(token);
+
+    }, [])
+    
 
     return (
       <Router>
@@ -182,9 +190,9 @@ function App() {
             </ul>
           </div>
           <Routes>
-            <Route exact path='/' element={<Home token={token}/>}></Route>
-            <Route exact path='/search' element={<Search/>}></Route>
-            <Route exact path='/playlists' element={<Playlist/>}></Route>
+            <Route exact path='/' element={<Home />}></Route>
+            <Route exact path='/search' element={<Search />}></Route>
+            <Route exact path='/playlists' element={<Playlist />}></Route>
             <Route exact path='/albums' element={<Albums/>}></Route>
             <Route exact path='/artists' element={<Artists/>}></Route>
           </Routes>
