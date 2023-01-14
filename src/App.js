@@ -87,15 +87,6 @@ function App() {
         setArtists(data.artists.items)
     }
 
-    const renderArtists = () => {
-        return artists.map(artist => (
-            <div key={artist.id}>
-                {artist.images.length ? <img width={"100%"} src={artist.images[0].url} alt=""/> : <div>No Image</div>}
-                {artist.name}
-            </div>
-        ))
-    }
-
     useEffect(() => {
         const hash = window.location.hash
         let token = window.localStorage.getItem("token");
@@ -183,11 +174,7 @@ function App() {
                   Albums
                 </Link>
               </li>
-              <li>
-                <Link className="tabs" to="/artists">
-                  Artists
-                </Link>
-              </li>
+              
             </ul>
           </div>
           <Routes>

@@ -24,9 +24,8 @@ const MusiCard = ({key, name, cover_art, link, sub_info=[]}) => {
 const Search = () => {
     const [results, setResults] = useState([]);
     const [searchKeyword, setKeyword] = useState("");
-
+    var token = window.localStorage.getItem("token");
     const search = async () => {
-        let token = window.localStorage.getItem("token");
         let keyword = document.getElementById("keyword").value;
         setKeyword(keyword);
         if (!keyword) {
