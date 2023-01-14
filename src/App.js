@@ -23,7 +23,7 @@ import user_icon from './assets/user.svg';
 
 function App() {
     const CLIENT_ID = "f8453497694c4440b8458f0182f51618"
-    const REDIRECT_URI = "http://localhost:3000"
+    const REDIRECT_URI = "https://oryn.vercel.app";
     const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
     const RESPONSE_TYPE = "token"
 
