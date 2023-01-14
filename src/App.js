@@ -28,8 +28,7 @@ function App() {
     const RESPONSE_TYPE = "token"
 
     const [token, setToken] = useState("")
-    const [searchKey, setSearchKey] = useState("")
-    const [artists, setArtists] = useState([]);
+    const [searchKey, setSearchKey] = useState("");
     const [userData, setUserData] = useState(null);
 
     // const getToken = () => {
@@ -62,29 +61,13 @@ function App() {
           headers: {Authorization: `Bearer ${token}`}
         })
       } catch (error) {
-        console.log("axios error", error);
-        logout();
+        console.log("axios error", error, token);
+        if (token) {logout();}
         return;
       }
       
       console.log("status", response.data);
       setUserData(response.data);
-    }
-      
-
-    const searchArtists = async (e) => {
-        e.preventDefault()
-        const {data} = await axios.get("https://api.spotify.com/v1/search", {
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
-            params: {
-                q: searchKey,
-                type: "artist"
-            }
-        })
-
-        setArtists(data.artists.items)
     }
 
     useEffect(() => {
@@ -191,24 +174,3 @@ function App() {
 }
 
 export default App;
-
-
-{/* <header className="App-header">
-    <h1>Spotify React</h1>
-    {!token ?
-        <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>Login
-            to Spotify</a>
-        : <button onClick={logout}>Logout</button>}
-
-    {token ?
-        <form onSubmit={searchArtists}>
-            <input type="text" onChange={e => setSearchKey(e.target.value)}/>
-            <button type={"submit"}>Search</button>
-        </form>
-
-        : <h2>Please login</h2>
-    }
-
-    {renderArtists()}
-
-</header> */}
