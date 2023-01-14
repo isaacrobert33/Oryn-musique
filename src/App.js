@@ -28,7 +28,6 @@ function App() {
     const RESPONSE_TYPE = "token"
 
     const [token, setToken] = useState("")
-    const [searchKey, setSearchKey] = useState("");
     const [userData, setUserData] = useState(null);
 
     // const getToken = () => {
