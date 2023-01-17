@@ -52,7 +52,7 @@ const MusicBar = ({track_length, status, track_title, track_artist, cover_art, p
 
 function App() {
     const CLIENT_ID = "f8453497694c4440b8458f0182f51618";
-    const REDIRECT_URI = "http://localhost:3000";
+    const REDIRECT_URI = "http://https://oryn.vercel.app/";
     const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
     const RESPONSE_TYPE = "token"
     const SCOPES = "user-read-playback-position,user-library-read,user-read-playback-state,user-modify-playback-state,user-read-currently-playing,user-read-recently-played,user-read-playback-position,streaming,app-remote-control"
