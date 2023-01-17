@@ -256,8 +256,8 @@ html, body {
   position: fixed;
   bottom: 0;
   z-index: 15;
-  background-color: #000402;
-  height: 14%;
+  background-color: #232528;
+  height: 12%;
   width: 100%;
 }
 
@@ -265,7 +265,7 @@ html, body {
   display: flex;
   flex-wrap: wrap;
   margin-left: 15%;
-  margin-top: 50px;
+  margin-top: 30px;
 }
 .status-bar img {
   margin: 0 10px;
@@ -282,11 +282,11 @@ html, body {
   flex-wrap: wrap;
   color: azure;
   margin-left: 20px;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 #track-title {
   margin-left: 16px;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 #track-title span {
   font-size: 12px;
