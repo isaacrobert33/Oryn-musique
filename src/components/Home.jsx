@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import DisplayCard from './DisplayCard';
 
-const Home = () => {
+const Home = ({player, device_id}) => {
     const [albums, setAlbums] = useState([]);
     const [playlists, setPlaylists] = useState([]);
 
@@ -54,7 +54,7 @@ const Home = () => {
                         albums?.length > 0 ? (
                             albums.map(
                                 (album) => (
-                                    <DisplayCard key={album.album.id} name={album.album.name} cover_art={album.album.images[0].url} link={album.album.href} artists={album.album.artists}/>
+                                    <DisplayCard key={album.album.id} id={album.album.id} name={album.album.name} cover_art={album.album.images[0].url} link={album.album.href} artists={album.album.artists}/>
                                 )
                             )
                         ) : (

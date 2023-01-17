@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import DisplayCard from './DisplayCard';
 
-const Playlist = () => {
+const Playlist = ({player, device_id}) => {
     const [playlists, setPlaylists] = useState([]);
     var token = window.localStorage.getItem("token");
 

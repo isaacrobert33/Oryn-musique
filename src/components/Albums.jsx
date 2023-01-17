@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, {useState, useEffect} from 'react';
 import DisplayCard from './DisplayCard';
 
-const Albums = () => {
+const Albums = ({player, device_id}) => {
     const [albums, setAlbums] = useState([]);
     var token = window.localStorage.getItem("token");
 
