@@ -264,7 +264,7 @@ html, body {
 .status-bar {
   display: flex;
   flex-wrap: wrap;
-  margin-left: 15%;
+  margin-left: 25%;
   margin-top: 30px;
 }
 .status-bar img {
@@ -298,4 +298,75 @@ html, body {
 
 .music-bar input::-webkit-slider-runnable-track {
   height: 2px;
+}
+
+#device-btn {
+  background-image: url('assets/vol.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  right: 60px;
+  padding: 10px;
+  margin-top: -25px;
+  cursor: pointer;
+}
+
+.device-list-overlay {
+  background-color: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  overflow: none;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  display: none;
+}
+
+.device-list {
+  background-color: #232528;
+  border-radius: 10px;
+  margin-left: 35%;
+  margin-top: 10%;
+  width: 300px;
+  height: 250px;
+  color: azure;
+  z-index: 40;
+  text-align: center;
+}
+
+.device-list ul {
+  text-align: left;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.device-list li {
+  margin: 5px;
+  cursor: pointer;
+  width: 98%;
+  padding: 4px;
+}
+
+.device-list li:hover {
+  background-color: azure;
+  color: #232528;
+}
+
+.device-type {
+  width: 72px;
+  height: 72px;
+  margin: 5px;
+  padding: 10px;
+  background-repeat: no-repeat;
+  background-position: center;
+
+}
+
+#comp {
+  background-image: url("assets/computer.svg");
+}
+
+#phone {
+  background-image: url("assets/phone.svg");
 }

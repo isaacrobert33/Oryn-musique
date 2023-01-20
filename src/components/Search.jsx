@@ -115,7 +115,7 @@ const Search = ({player, updateStatus}) => {
     const search = async (e, _offset_=null) => {
         let keyword = document.getElementById("keyword").value;
         let search_offset = offset;
-        console.log(_offset_);
+        
         if (_offset_ !== null) {
             search_offset = _offset_;
         }
@@ -155,7 +155,6 @@ const Search = ({player, updateStatus}) => {
 
     function navBack() {
         let n_offset = offset - 11;
-        console.log("back", n_offset);
         setOffset(n_offset);
         search({}, n_offset);
     }
