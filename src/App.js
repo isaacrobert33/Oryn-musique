@@ -25,7 +25,7 @@ import next_icon from './assets/next.svg';
 import play_icon from './assets/play.svg';
 import pause_icon from './assets/pause.svg';
 
-const MusicBar = ({track_length, status=0, track_title, track_artist, cover_art, playing=false, play, pause, next, previous, fetchDevices}) => {
+const MusicBar = ({track_length, status=0, track_title, track_artist, cover_art, playing=false, play, pause, next, previous, fetchDevices, seek}) => {
   const displayDevices = () => {
     document.getElementById("device-list-overlay").style.display = "block";
     fetchDevices()
@@ -46,7 +46,7 @@ const MusicBar = ({track_length, status=0, track_title, track_artist, cover_art,
           playing ? (<img onClick={pause} width={"26px"} height={"26px"} src={pause_icon} alt={"pause"}/>) : (<img onClick={play} width={"26px"} height={"26px"} src={play_icon} alt={"play"}/>)
         }
         <img onClick={next} width={"26px"} height={"26px"} src={next_icon} alt={"next"}/>
-        <input onChange={() => (console.log("changed"))} onDrag={() => (console.log("dragged"))} type="range" id="seek" className="track-seek" max={track_length} min="0" value={status}></input>
+        <input onChange={() => (seek())} type="range" id="seek" className="track-seek" max={track_length} min="0" value={status}></input>
       </div>
       <span onClick={displayDevices} id="device-btn">
       </span>
@@ -54,7 +54,8 @@ const MusicBar = ({track_length, status=0, track_title, track_artist, cover_art,
   )
 }
 
-const DeviceList = ({device_list}) => {
+const DeviceList = ({device_list, switchDevice}) => {
+
   return (
     <div onClick={() => (document.getElementById("device-list-overlay").style.display = "none")} id="device-list-overlay" className="device-list-overlay">
       <div className="device-list">
@@ -65,7 +66,7 @@ const DeviceList = ({device_list}) => {
             device_list?.length > 0 ? (
               device_list.map(
                 (device) => (
-                  <li>
+                  <li onClick={() => (switchDevice(device.id))}>
                     {
                       device.type === "Computer" ? (
                         <span id="comp" className="device-type"></span>
@@ -79,7 +80,7 @@ const DeviceList = ({device_list}) => {
                 )
               )
             ) : (
-              <span>No Devices</span>
+              <p style={{textAlign: "center"}}>No Devices</p>
             )
           }
         </ul>
@@ -87,6 +88,8 @@ const DeviceList = ({device_list}) => {
     </div>
   )
 }
+
+var statusInterval, seekInterval;
 
 function App() {
     const CLIENT_ID = "f8453497694c4440b8458f0182f51618";
@@ -104,6 +107,7 @@ function App() {
     const [trackLen, setTrackLen] = useState("");
     const [playing, setPlaying] = useState(false);
     const [devices, setDevices] = useState([]);
+    const [seekValue, setSeek] = useState(0);
   
     // const getToken = () => {
     //     let urlParams = new URLSearchParams(window.location.hash.replace("#","?"));
@@ -134,7 +138,8 @@ function App() {
         pause();
       }
     }
-    let interval, seekInterval;
+
+    
     const updateStatus = async () => {
       const {data} = await axios.get("https://api.spotify.com/v1/me/player", {
         headers: {
@@ -142,59 +147,60 @@ function App() {
         }
       });
       if (!data) {
-        interval = setInterval(updateStatus, 5000)
+        statusInterval = setInterval(updateStatus, 5000)
         return;
       }
-      clearInterval(interval);
+      clearInterval(statusInterval);
       let trackInfo = {uri: data.item.uri, cover_art: data.item.album.images[0].url, title: data.item.name, artist: data.item.artists[0].name, playing: data.is_playing};
       setPlayingTrack(trackInfo);
       setTrackLen(data.item.duration_ms);
       setPlaying(data.is_playing);
+      if (seekInterval) {
+        clearInterval(seekInterval);
+      }
       seekInterval =  setInterval(updateSeek, 1000);
-      
+      console.log("seekId", seekInterval);
     }
 
-    const getCircularReplacer = () => {
-      const seen = new WeakSet();
-      return (key, value) => {
-        if (typeof value === "object" && value !== null) {
-          if (seen.has(value)) {
-            return;
-          }
-          seen.add(value);
-        }
-        return value;
-      };
-    };
-
-    const play = async (uri) => {
+    const play = async (e, uri) => {
         let position_ms = 0;
         let {data} = await axios.get("https://api.spotify.com/v1/me/player", {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
-        if (data) {
-          position_ms = data.progress_ms;
+        if (!uri) {
+          uri = playingTrack.uri;
         }
-        let payload = JSON.stringify({uris: [uri], position_ms: position_ms}, getCircularReplacer());
-        console.log(payload);
+        if (data && uri === data.item.uri) {
+          position_ms = Number(data.progress_ms);
+          document.getElementById("seek").value = position_ms;
+        }
+        console.log(typeof position_ms, position_ms, typeof uri, uri);
+        let payload = {"uris": [uri], "position_ms": position_ms};
         await axios.put(
             `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, 
             payload, 
             {headers: {Authorization: `Bearer ${token}`}}
         );
-        setTimeout(updateStatus, 20000)
+        setTimeout(updateStatus, 3000)
         setPlaying(true);
+        console.log("playing")
     }
 
     const pause = async () => {
+      let {data} = await axios.get("https://api.spotify.com/v1/me/player", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        clearInterval(seekInterval);
+        document.getElementById("seek").value = data.progress_ms;
         await axios.put(
             `https://api.spotify.com/v1/me/player/pause?device_id=${deviceId}`,
             {},
             {headers: {Authorization: `Bearer ${token}`}}
         )
-        clearInterval(seekInterval);
         setPlaying(false);
     }
 
@@ -216,12 +222,26 @@ function App() {
         document.getElementById("seek").value = "0";
     }
 
-    const seek = async (position) => {
+    const seek = async () => {
+        clearInterval(seekInterval);
+        let {data} = await axios.get("https://api.spotify.com/v1/me/player", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
         await axios.put(
-            `https://api.spotify.com/v1/me/player/seek?device_id=${deviceId}&position_ms=${position}`,
+            `https://api.spotify.com/v1/me/player/seek?device_id=${deviceId}&position_ms=${data.progress_ms}`,
             {},
             {headers: {Authorization: `Bearer ${token}`}}
         )
+    }
+
+    const switchDevice = async (device_id) => {
+      await axios.put(`https://api.spotify.com/v1/me/player`, 
+          {device_ids: [device_id], play: true}, 
+          {headers: {Authorization: `Bearer ${token}`}
+        })
     }
 
     function startPlayback(token) {
@@ -376,13 +396,13 @@ function App() {
             </ul>
           </div>
           <Routes>
-            <Route exact path='/' element={<Home player={player} device_id={deviceId} />}></Route>
-            <Route exact path='/search' element={<Search player={player} updateStatus={updateStatus} />}></Route>
-            <Route exact path='/playlists' element={<Playlist player={player} device_id={deviceId} />}></Route>
-            <Route exact path='/albums' element={<Albums player={player} device_id={deviceId} />}></Route>
+            <Route exact path='/' element={<Home player={play} device_id={deviceId} />}></Route>
+            <Route exact path='/search' element={<Search player={play} updateStatus={updateStatus} />}></Route>
+            <Route exact path='/playlists' element={<Playlist player={play} device_id={deviceId} />}></Route>
+            <Route exact path='/albums' element={<Albums player={play} device_id={deviceId} />}></Route>
           </Routes>
-          <MusicBar track_title={playingTrack.title} track_length={trackLen} track_artist={playingTrack.artist} cover_art={playingTrack.cover_art} playing={playing} play={play} pause={pause} next={next} previous={previous} fetchDevices={fetchDevices}/>
-          <DeviceList device_list={devices} />
+          <MusicBar track_title={playingTrack.title} track_length={trackLen} track_artist={playingTrack.artist} cover_art={playingTrack.cover_art} playing={playing} play={play} pause={pause} next={next} previous={previous} fetchDevices={fetchDevices} seek={seek}/>
+          <DeviceList device_list={devices} switchDevice={switchDevice}/>
         </div>
       </Router>
         

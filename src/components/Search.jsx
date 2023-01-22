@@ -6,7 +6,7 @@ const MusiCard = ({id, name, cover_art, link, uri, sub_info=[], play_track, canp
     return (
         <div key={id} className='music-card'>
             {
-                canplay ? (<span className='play-btn' onClick={() => (play_track(uri))}>►</span>) : (<></>)
+                canplay ? (<span className='play-btn' onClick={(e) => (play_track(e, uri))}>►</span>) : (<></>)
             }
             <a className='music-card-link' href={link} target={"_blank"}>
                 <img width={"196px"} height={"196px"} src={cover_art} alt={cover_art}></img>
@@ -213,7 +213,7 @@ const Search = ({player, updateStatus}) => {
                     results?.length > 0 ? (
                         results.map(
                             (res) => (
-                                <MusiCard key={res.id} id={res.id} name={res.name} sub_info={res.artists} cover_art={res.album.images[0].url} uri={res.uri} play_track={play}/>
+                                <MusiCard key={res.id} id={res.id} name={res.name} sub_info={res.artists} cover_art={res.album.images[0].url} uri={res.uri} play_track={player}/>
                             )
                         )
                         
