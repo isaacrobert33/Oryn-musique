@@ -364,7 +364,7 @@ function App() {
                   <span>  
                     <img src={home_icon} alt={"home"}></img>
                   </span>
-                  Home
+                  <b>Home</b>
                 </Link>
                 
               </li>
@@ -373,7 +373,7 @@ function App() {
                   <span>
                   <img src={search_icon} alt={"search"}/>
                   </span>
-                  Search
+                  <b>Search</b>
                 </Link>
                 
               </li>
@@ -382,7 +382,7 @@ function App() {
                   <span>
                     <img src={playlist_icon} alt={"playlist"}/>
                   </span>
-                  Playlist
+                  <b>Playlist</b>
                 </Link>
               </li>
               <li>
@@ -390,7 +390,7 @@ function App() {
                   <span>
                     <img src={album_icon} alt={"albums"}/> 
                   </span>
-                  Albums
+                  <b>Albums</b>
                 </Link>
               </li>
             </ul>
