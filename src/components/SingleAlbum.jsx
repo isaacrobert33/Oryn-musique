@@ -5,12 +5,12 @@ import {
 } from 'react-router-dom';
 import Track from './Track';
 
-const SinglePlaylist = ({play}) => {
+const SingleAlbum = ({play}) => {
     var token = window.localStorage.getItem("token");
-    const {playlist_id} = useParams();
+    const {album_id} = useParams();
 
     const [tracks, setTracks] = useState([]);
-    const [playlist, setPlaylist] = useState(null);
+    const [album, setAlbum] = useState(null);
 
     // async function fetchTracks() {
     //     await axios.get(`https://api.spotify.com/v1/playlists/${playlist_id}/tracks`, {
@@ -26,8 +26,8 @@ const SinglePlaylist = ({play}) => {
     //         )
     // }
 
-    async function fetchPlaylist() {
-        await axios.get(`https://api.spotify.com/v1/playlists/${playlist_id}`, {
+    async function fetchAlbum() {
+        await axios.get(`https://api.spotify.com/v1/albums/${album_id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -35,7 +35,7 @@ const SinglePlaylist = ({play}) => {
             .then(
                 response => {
                     console.log(response)
-                    setPlaylist(response.data);
+                    setAlbum(response.data);
                     setTracks(response.data.tracks.items);
                 }
             )
@@ -44,8 +44,7 @@ const SinglePlaylist = ({play}) => {
     useEffect(
         (e) => {
             if (!tracks.length > 0) {
-                fetchPlaylist();
-                // fetchTracks();
+                fetchAlbum();
             }
             
         }
@@ -53,12 +52,12 @@ const SinglePlaylist = ({play}) => {
     return (
         <div className='screen' id='single-playlist'>
             {
-                playlist ? (
+                album ? (
                     <>
                         <div className='playlist-back-drop'>
-                            <img width={"280px"} height={"280px"} src={playlist.images[0].url} alt={playlist.id}/>
-                            <h1>{playlist.name}</h1><br></br>
-                            <span>{`${playlist.tracks.total} songs`}</span>
+                            <img width={"280px"} height={"280px"} src={album.images[0].url} alt={album.id}/>
+                            <h1>{album.name}</h1><br></br>
+                            <span>{`${album.tracks.total} songs`}</span>
                         </div>
                         <div className='tracks'>
                                 <div className='tracks-heading'>
@@ -75,10 +74,10 @@ const SinglePlaylist = ({play}) => {
                                             track_data => (
                                                 <Track 
                                                     play_callback={e => (
-                                                        play(e, track_data.track.uri)
+                                                        play(e, track_data.uri)
                                                     )}
-                                                    key={track_data.track.id} id={track_data.track.id} cover_art={track_data.track.album.images[0].url} 
-                                                    title={track_data.track.name} artist={track_data.track.artists[0].name} duration={track_data.track.duration_ms}
+                                                    key={track_data.id} id={track_data.id} cover_art={album.images[0].url} 
+                                                    title={track_data.name} artist={track_data.artists[0].name} duration={track_data.duration_ms}
                                                     />
                                             )
                                         )
@@ -98,4 +97,4 @@ const SinglePlaylist = ({play}) => {
     )
 }
 
-export default SinglePlaylist;
+export default SingleAlbum;

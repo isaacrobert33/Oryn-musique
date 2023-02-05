@@ -37,7 +37,7 @@ const Albums = ({player, device_id}) => {
                         albums?.length > 0 ? (
                             albums.map(
                                 (album) => (
-                                    <DisplayCard key={album.album.id} name={album.album.name} cover_art={album.album.images[0].url} link={album.album.href} artists={album.album.artists}/>
+                                    <DisplayCard key={album.album.id} name={album.album.name} cover_art={album.album.images[0].url} link={`/album/${album.album.id}`} artists={album.album.artists}/>
                                 )
                             )
                         ) : (

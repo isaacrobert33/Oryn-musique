@@ -25,6 +25,7 @@ import next_icon from './assets/next.svg';
 import play_icon from './assets/play.svg';
 import pause_icon from './assets/pause.svg';
 import SinglePlaylist from "./components/SinglePlaylist";
+import SingleAlbum from "./components/SingleAlbum";
 
 const MusicBar = ({track_length, status=0, track_title, track_artist, cover_art, playing=false, play, pause, next, previous, fetchDevices, seek}) => {
   const displayDevices = () => {
@@ -95,7 +96,7 @@ var statusInterval, seekInterval;
 function App() {
     const CLIENT_ID = "f8453497694c4440b8458f0182f51618";
     const REDIRECT_URI = "https://oryn.vercel.app";
-    // "http://localhost:3000"
+    // "http://localhost:3000";
     const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
     const RESPONSE_TYPE = "token"
     const SCOPES = "user-read-playback-position,user-library-read,user-read-playback-state,user-modify-playback-state,user-read-currently-playing,user-read-recently-played,user-read-playback-position,streaming,app-remote-control"
@@ -108,6 +109,7 @@ function App() {
     const [playingTrack, setPlayingTrack] = useState({});
     const [trackLen, setTrackLen] = useState("");
     const [playing, setPlaying] = useState(false);
+    const [playerShow, setPlayerShow] = useState(false);
     const [devices, setDevices] = useState([]);
     const [seekValue, setSeek] = useState(0);
   
@@ -178,7 +180,7 @@ function App() {
           position_ms = Number(data.progress_ms);
           document.getElementById("seek").value = position_ms;
         }
-        console.log(typeof position_ms, position_ms, typeof uri, uri);
+        
         let payload = {"uris": [uri], "position_ms": position_ms};
         await axios.put(
             `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, 
@@ -187,7 +189,10 @@ function App() {
         );
         setTimeout(updateStatus, 3000)
         setPlaying(true);
-        console.log("playing")
+        console.log(`Playing ${uri}...`)
+        if (!playerShow) {
+          setPlayerShow(true);
+        }
     }
 
     const pause = async () => {
@@ -403,9 +408,10 @@ function App() {
             <Route exact path='/playlists' element={<Playlist player={play} device_id={deviceId} />}></Route>
             <Route exact path='/albums' element={<Albums player={play} device_id={deviceId} />}></Route>
             <Route exact path="/playlist/:playlist_id" element={<SinglePlaylist play={play} />} />
+            <Route exact path="/album/:album_id" element={<SingleAlbum play={play} />} />
           </Routes>
           {
-            playing ? (
+            playerShow ? (
               <MusicBar track_title={playingTrack.title} track_length={trackLen} track_artist={playingTrack.artist} cover_art={playingTrack.cover_art} playing={playing} play={play} pause={pause} next={next} previous={previous} fetchDevices={fetchDevices} seek={seek}/>
           
             ) : (
