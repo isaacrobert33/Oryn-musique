@@ -24,6 +24,7 @@ import prev_icon from './assets/previous.svg';
 import next_icon from './assets/next.svg';
 import play_icon from './assets/play.svg';
 import pause_icon from './assets/pause.svg';
+import SinglePlaylist from "./components/SinglePlaylist";
 
 const MusicBar = ({track_length, status=0, track_title, track_artist, cover_art, playing=false, play, pause, next, previous, fetchDevices, seek}) => {
   const displayDevices = () => {
@@ -93,7 +94,8 @@ var statusInterval, seekInterval;
 
 function App() {
     const CLIENT_ID = "f8453497694c4440b8458f0182f51618";
-    const REDIRECT_URI = "https://oryn.vercel.app";
+    const REDIRECT_URI = "http://localhost:3000"
+    // "https://oryn.vercel.app";
     const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
     const RESPONSE_TYPE = "token"
     const SCOPES = "user-read-playback-position,user-library-read,user-read-playback-state,user-modify-playback-state,user-read-currently-playing,user-read-recently-played,user-read-playback-position,streaming,app-remote-control"
@@ -400,8 +402,16 @@ function App() {
             <Route exact path='/search' element={<Search player={play} updateStatus={updateStatus} />}></Route>
             <Route exact path='/playlists' element={<Playlist player={play} device_id={deviceId} />}></Route>
             <Route exact path='/albums' element={<Albums player={play} device_id={deviceId} />}></Route>
+            <Route exact path="/playlist/:playlist_id" element={<SinglePlaylist play={play} />} />
           </Routes>
-          <MusicBar track_title={playingTrack.title} track_length={trackLen} track_artist={playingTrack.artist} cover_art={playingTrack.cover_art} playing={playing} play={play} pause={pause} next={next} previous={previous} fetchDevices={fetchDevices} seek={seek}/>
+          {
+            playing ? (
+              <MusicBar track_title={playingTrack.title} track_length={trackLen} track_artist={playingTrack.artist} cover_art={playingTrack.cover_art} playing={playing} play={play} pause={pause} next={next} previous={previous} fetchDevices={fetchDevices} seek={seek}/>
+          
+            ) : (
+              <></>
+            )
+          }
           <DeviceList device_list={devices} switchDevice={switchDevice}/>
         </div>
       </Router>

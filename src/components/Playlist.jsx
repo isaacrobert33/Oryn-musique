@@ -35,7 +35,7 @@ const Playlist = ({player, device_id}) => {
                     playlists?.length > 0 ? (
                         playlists.map(
                             (pl) => (
-                                <DisplayCard key={pl.id}  name={pl.name} cover_art={pl.images[0].url} link={pl.href} />
+                                <DisplayCard key={pl.id}  name={pl.name} cover_art={pl.images[0].url} link={`/playlist/${pl.id}`} />
                             )
                         )
                     ) : (
@@ -43,6 +43,7 @@ const Playlist = ({player, device_id}) => {
                     )
                 }
             </div>
+            
         </div>
     )
 }

@@ -314,7 +314,7 @@ html, body {
 .device-list-overlay {
   background-color: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(8px);
-  position: absolute;
+  position: fixed;
   overflow: hidden;
   top: 0;
   right: 0;
@@ -373,6 +373,88 @@ html, body {
 
 #phone {
   background-image: url("assets/phone.svg");
+}
+
+.playlist-back-drop {
+  margin-left: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+.playlist-back-drop h1 {
+  font-size: 90px;
+  margin-left: 10px;
+}
+.playlist-back-drop span {
+  position: absolute;
+  margin-top: 170px;
+  margin-left: 380px;
+
+}
+#single-playlist {
+  width: 80%;
+  margin-left: 20%;
+}
+.tracks-heading {
+  width: 80%;
+}
+.tracks-heading span {
+  position: absolute;
+  font-weight: bold;
+}
+.track-list {
+  margin: 0;
+  margin-left: 5px;
+  padding: 0;
+  padding-top: 30px;
+}
+.track-play {
+  position: absolute;
+  z-index: 3;
+  display: block;
+  font-size: 23px;
+  margin-left: 3px;
+}
+.tracks {
+  background-color: rgba(20, 20, 20, 0.4);
+  width: 100%;
+  height: 100%;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  margin-top: 20px;
+}
+.tracks hr {
+  margin-top: 20px;
+}
+.track {
+  width: 100%;
+  height: 50px;
+  list-style-type: none;
+  padding: 5px 0;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.track:hover {
+  background-color: rgba(190, 190, 190, 0.6);
+}
+.track span {
+  position: absolute;
+}
+.track-art {
+  margin-left: 4%;
+}
+.track-title {
+  margin-left: 10%;
+}
+.track-artist {
+  margin-left: 45%;
+}
+
+.track-duration {
+  position: absolute;
+  margin-left: 70%;
 }
 
 @media only screen and (max-width: 600px) {
