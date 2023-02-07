@@ -12,52 +12,17 @@ import Home from './components/Home';
 import Search from "./components/Search";
 import Playlist from "./components/Playlist";
 import Albums from "./components/Albums";
-import Artists from "./components/Artists";
-
 import home_icon from './assets/home.svg';
 import search_icon from './assets/search-icon.svg';
 import playlist_icon from './assets/playlist.svg';
 import album_icon from './assets/album.svg';
 import oryn from './assets/oryn.svg';
 import user_icon from './assets/user.svg';
-import prev_icon from './assets/previous.svg';
-import next_icon from './assets/next.svg';
-import play_icon from './assets/play.svg';
-import pause_icon from './assets/pause.svg';
 import SinglePlaylist from "./components/SinglePlaylist";
 import SingleAlbum from "./components/SingleAlbum";
-
-const MusicBar = ({track_length, status=0, track_title, track_artist, cover_art, playing=false, play, pause, next, previous, fetchDevices, seek}) => {
-  const displayDevices = () => {
-    document.getElementById("device-list-overlay").style.display = "block";
-    fetchDevices()
-  }
-  return (
-    <div className="music-bar">
-      <div id="track-info">
-        <img id="track-art" width={"64px"} height={"64px"} src={cover_art} alt={cover_art}/>
-        <span id="track-title">
-          <b>{track_title}</b><br></br>
-          <span>{track_artist}</span>
-        </span>
-      </div>
-      
-      <div className="status-bar">
-        <img onClick={previous} width={"26px"} height={"26px"} src={prev_icon} alt={"previous"}/>
-        {
-          playing ? (<img onClick={pause} width={"26px"} height={"26px"} src={pause_icon} alt={"pause"}/>) : (<img onClick={play} width={"26px"} height={"26px"} src={play_icon} alt={"play"}/>)
-        }
-        <img onClick={next} width={"26px"} height={"26px"} src={next_icon} alt={"next"}/>
-        <input onChange={() => (seek())} type="range" id="seek" className="track-seek" max={track_length} min="0" value={status}></input>
-      </div>
-      <span onClick={displayDevices} id="device-btn">
-      </span>
-    </div>
-  )
-}
+import MusicBar from "./components/MusicBar";
 
 const DeviceList = ({device_list, switchDevice}) => {
-
   return (
     <div onClick={() => (document.getElementById("device-list-overlay").style.display = "none")} id="device-list-overlay" className="device-list-overlay">
       <div className="device-list">
@@ -92,11 +57,14 @@ const DeviceList = ({device_list, switchDevice}) => {
 }
 
 var statusInterval, seekInterval;
+var currentTime = 2000;
+var duration = 0;
 
 function App() {
     const CLIENT_ID = "f8453497694c4440b8458f0182f51618";
-    const REDIRECT_URI = "https://oryn.vercel.app";
-    // "http://localhost:3000";
+    const REDIRECT_URI = "http://localhost:3000";
+    // "https://oryn.vercel.app";
+    // 
     const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
     const RESPONSE_TYPE = "token"
     const SCOPES = "user-read-playback-position,user-library-read,user-read-playback-state,user-modify-playback-state,user-read-currently-playing,user-read-recently-played,user-read-playback-position,streaming,app-remote-control"
@@ -111,7 +79,7 @@ function App() {
     const [playing, setPlaying] = useState(false);
     const [playerShow, setPlayerShow] = useState(false);
     const [devices, setDevices] = useState([]);
-    const [seekValue, setSeek] = useState(0);
+    // const [duration, setDuration] = useState(0);
   
     // const getToken = () => {
     //     let urlParams = new URLSearchParams(window.location.hash.replace("#","?"));
@@ -136,14 +104,18 @@ function App() {
       })
       setDevices(data.devices)
     }
-    const updateSeek = () => {
-      document.getElementById("seek").value = Number(document.getElementById("seek").value)+1000;
-      if (document.getElementById("seek").value == trackLen) {
+
+    const updateSeek = async () => {
+      let progressFilled = document.getElementById("seek");
+      let progressValue = (currentTime/duration)*100;
+      progressFilled.style.flexBasis = `${progressValue}%`;
+      currentTime += 1000;
+      if (duration === currentTime) {
         pause();
       }
     }
 
-    
+    var mousedown = false;
     const updateStatus = async () => {
       const {data} = await axios.get("https://api.spotify.com/v1/me/player", {
         headers: {
@@ -155,6 +127,7 @@ function App() {
         return;
       }
       clearInterval(statusInterval);
+      duration = data.item.duration_ms;
       let trackInfo = {uri: data.item.uri, cover_art: data.item.album.images[0].url, title: data.item.name, artist: data.item.artists[0].name, playing: data.is_playing};
       setPlayingTrack(trackInfo);
       setTrackLen(data.item.duration_ms);
@@ -163,7 +136,12 @@ function App() {
         clearInterval(seekInterval);
       }
       seekInterval =  setInterval(updateSeek, 1000);
-      console.log("seekId", seekInterval);
+
+      let progress = document.getElementById("seek");
+      progress.addEventListener("click", seek)
+      progress.addEventListener("mousemove", (e) => mousedown && seek(e))
+      progress.addEventListener("mousedown", () => (mousedown = true))
+      progress.addEventListener("mouseup", () => (mousedown = false))
     }
 
     const play = async (e, uri) => {
@@ -181,18 +159,22 @@ function App() {
           document.getElementById("seek").value = position_ms;
         }
         
-        let payload = {"uris": [uri], "position_ms": position_ms};
+        let payload = {"uris": uri, "position_ms": position_ms};
         await axios.put(
             `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, 
             payload, 
             {headers: {Authorization: `Bearer ${token}`}}
-        );
-        setTimeout(updateStatus, 3000)
-        setPlaying(true);
-        console.log(`Playing ${uri}...`)
-        if (!playerShow) {
-          setPlayerShow(true);
-        }
+        ).then(
+          (e) => {
+            setPlaying(true);
+            console.log(`Playing ${uri}...`)
+            if (!playerShow) {
+              setPlayerShow(true);
+            }
+            setTimeout(updateStatus, 2000)
+          }
+        )
+        
     }
 
     const pause = async () => {
@@ -229,19 +211,19 @@ function App() {
         document.getElementById("seek").value = "0";
     }
 
-    const seek = async () => {
-        clearInterval(seekInterval);
-        let {data} = await axios.get("https://api.spotify.com/v1/me/player", {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-
+    const seek = async (event) => {
+        let progress = document.getElementById("seek");
+    
+        const seekTime = parseInt((event.offsetX / progress.offsetWidth) * duration);
+        
+        console.log(seekTime);
         await axios.put(
-            `https://api.spotify.com/v1/me/player/seek?device_id=${deviceId}&position_ms=${data.progress_ms}`,
+            `https://api.spotify.com/v1/me/player/seek?device_id=${deviceId}&position_ms=${seekTime}`,
             {},
             {headers: {Authorization: `Bearer ${token}`}}
         )
+        currentTime = seekTime;
+        
     }
 
     const switchDevice = async (device_id) => {

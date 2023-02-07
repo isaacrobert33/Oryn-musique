@@ -11,6 +11,7 @@ const SinglePlaylist = ({play}) => {
 
     const [tracks, setTracks] = useState([]);
     const [playlist, setPlaylist] = useState(null);
+    const [URI, setURI] = useState([]);
 
     // async function fetchTracks() {
     //     await axios.get(`https://api.spotify.com/v1/playlists/${playlist_id}/tracks`, {
@@ -34,9 +35,16 @@ const SinglePlaylist = ({play}) => {
             })
             .then(
                 response => {
-                    console.log(response)
+                    let track_items = response.data.tracks.items;
+                    let uris = [];
+                    for (let i=0; i<track_items.length; i++) {
+                        uris.push(track_items[i].uri);
+                    }
+
                     setPlaylist(response.data);
-                    setTracks(response.data.tracks.items);
+                    setTracks(track_items);
+                    setURI(uris);
+                    console.log(uris);
                 }
             )
     }
@@ -58,7 +66,7 @@ const SinglePlaylist = ({play}) => {
                         <div className='playlist-back-drop'>
                             <img width={"280px"} height={"280px"} src={playlist.images[0].url} alt={playlist.id}/>
                             <h1>{playlist.name}</h1><br></br>
-                            <span>{`${playlist.tracks.total} songs`}</span>
+                            <span>{`${playlist.tracks.total} songs`} • {`${playlist.release_date.split("-")[0]}`}</span>
                         </div>
                         <div className='tracks'>
                                 <div className='tracks-heading'>
@@ -75,7 +83,7 @@ const SinglePlaylist = ({play}) => {
                                             track_data => (
                                                 <Track 
                                                     play_callback={e => (
-                                                        play(e, track_data.track.uri)
+                                                        play(e, URI.slice(URI.indexOf(track_data.uri)))
                                                     )}
                                                     key={track_data.track.id} id={track_data.track.id} cover_art={track_data.track.album.images[0].url} 
                                                     title={track_data.track.name} artist={track_data.track.artists[0].name} duration={track_data.track.duration_ms}

@@ -6,9 +6,9 @@ const MusiCard = ({id, name, cover_art, link, uri, sub_info=[], play_track, canp
     return (
         <div key={id} className='music-card'>
             {
-                canplay ? (<span className='play-btn' onClick={(e) => (play_track(e, uri))}>►</span>) : (<></>)
+                canplay ? (<span className='play-btn' onClick={(e) => (play_track(e, [uri]))}>►</span>) : (<></>)
             }
-            <a className='music-card-link' href={link} target={"_blank"}>
+            <a className='music-card-link' href={link} target={"_blank"} rel="noreferrer">
                 <img width={"196px"} height={"196px"} src={cover_art} alt={cover_art}></img>
                 <b>{name}</b>
                 <br></br>
@@ -24,7 +24,6 @@ const MusiCard = ({id, name, cover_art, link, uri, sub_info=[], play_track, canp
 
 const Search = ({player, updateStatus}) => {
     const [results, setResults] = useState([]);
-    const [searchKeyword, setKeyword] = useState("");
     const [categories, setCategories] = useState([]);
     const [searchHeading, setHeading] = useState("Recent searches");
     const [offset, setOffset] = useState(0);
@@ -32,8 +31,6 @@ const Search = ({player, updateStatus}) => {
     const [total, setTotal] = useState(0);
     
     var token = window.localStorage.getItem("token");
-    var device_id = window.localStorage.getItem("device_id");
-
     const fetchCategories = async () => {
         const {data} = await axios.get("https://api.spotify.com/v1/browse/categories", {
             headers: {
@@ -44,54 +41,7 @@ const Search = ({player, updateStatus}) => {
         setCategories(data.categories.items)
 
     }
-    var playing = false;
-    const play = async (uri) => {
-        if (!playing) {
-            axios.put(
-                `https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, 
-                {uris: [uri]}, 
-                {headers: {Authorization: `Bearer ${token}`}}
-            );
-            setTimeout(updateStatus, 5000)
-            playing = true;
-        } else {
-            pause();
-        }
-        
-    }
-
-    const pause = async () => {
-        axios.put(
-            `https://api.spotify.com/v1/me/player/pause?device_id=${device_id}`,
-            {},
-            {headers: {Authorization: `Bearer ${token}`}}
-        )
-        playing = false;
-    }
-
-    const next = async () => {
-        axios.post(
-            `https://api.spotify.com/v1/me/player/next?device_id=${device_id}`,
-            {},
-            {headers: {Authorization: `Bearer ${token}`}}
-        )
-    }
     
-    const previous = async () => {
-        axios.post(
-            `https://api.spotify.com/v1/me/player/previous?device_id=${device_id}`,
-            {},
-            {headers: {Authorization: `Bearer ${token}`}}
-        )
-    }
-
-    const seek = async (position) => {
-        axios.put(
-            `https://api.spotify.com/v1/me/player/seek?device_id=${device_id}&position_ms=${position}`,
-            {},
-            {headers: {Authorization: `Bearer ${token}`}}
-        )
-    }
     async function recentSearch(q) {
         const {data} = await axios.get("https://api.spotify.com/v1/search", {
             headers: {
@@ -119,9 +69,6 @@ const Search = ({player, updateStatus}) => {
         if (_offset_ !== null) {
             search_offset = _offset_;
         }
-
-        setKeyword(keyword);
-
         if (!keyword) {
             setHeading("Recent searches");
             setResults([]);
