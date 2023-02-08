@@ -62,8 +62,9 @@ var duration = 0;
 
 function App() {
     const CLIENT_ID = "f8453497694c4440b8458f0182f51618";
-    const REDIRECT_URI = "https://oryn.vercel.app";
-    // "http://localhost:3000";
+    const REDIRECT_URI = "http://localhost:3000";
+    // "https://oryn.vercel.app";
+    // 
     const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
     const RESPONSE_TYPE = "token"
     const SCOPES = "user-read-playback-position,user-library-read,user-read-playback-state,user-modify-playback-state,user-read-currently-playing,user-read-recently-played,user-read-playback-position,streaming,app-remote-control"
@@ -71,7 +72,6 @@ function App() {
     // const TOKEN_URL = `https://accounts.spotify.com/api/token`;
     const [token, setToken] = useState("");
     const [userData, setUserData] = useState(null);
-    const [player, setPlayer] = useState(undefined);
     const [deviceId, setDeviceId] = useState(undefined);
     const [playingTrack, setPlayingTrack] = useState({});
     const [trackLen, setTrackLen] = useState("");
@@ -104,18 +104,7 @@ function App() {
       setDevices(data.devices)
     }
 
-    const updateSeek = async () => {
-      let progressFilled = document.getElementById("seek");
-      let progressValue = (currentTime/duration)*100;
-      progressFilled.style.flexBasis = `${progressValue}%`;
-      currentTime += 1000;
-      if (duration === currentTime) {
-        pause();
-      }
-    }
-
-    var mousedown = false;
-    const updateStatus = async () => {
+    const updateMusicBar = async () => {
       const {data} = await axios.get("https://api.spotify.com/v1/me/player", {
         headers: {
           Authorization: `Bearer ${token}`
@@ -131,12 +120,28 @@ function App() {
       setPlayingTrack(trackInfo);
       setTrackLen(data.item.duration_ms);
       setPlaying(data.is_playing);
+    }
+
+    const updateSeek = async () => {
+      let progressFilled = document.getElementById("seek");
+      let progressValue = (currentTime/duration)*100;
+      progressFilled.style.flexBasis = `${progressValue}%`;
+      currentTime += 1000;
+      if (duration >= currentTime) {
+        console.log("Playing next");
+        updateMusicBar();
+      }
+    }
+
+    var mousedown = false;
+    const updateStatus = async () => {
+      updateMusicBar()
       if (seekInterval) {
         clearInterval(seekInterval);
       }
       seekInterval =  setInterval(updateSeek, 1000);
 
-      let progress = document.getElementById("seek");
+      let progress = document.getElementById("player-progress");
       progress.addEventListener("click", seek)
       progress.addEventListener("mousemove", (e) => mousedown && seek(e))
       progress.addEventListener("mousedown", () => (mousedown = true))
@@ -211,7 +216,7 @@ function App() {
     }
 
     const seek = async (event) => {
-        let progress = document.getElementById("seek");
+        let progress = document.getElementById("seek")
     
         const seekTime = parseInt((event.offsetX / progress.offsetWidth) * duration);
         
@@ -239,8 +244,6 @@ function App() {
             getOAuthToken: cb => { cb(token); },
             volume: 0.5
         });
-
-        setPlayer(player);
 
         player.addListener('ready', ({ device_id }) => {
             console.log('Ready with Device ID', device_id);

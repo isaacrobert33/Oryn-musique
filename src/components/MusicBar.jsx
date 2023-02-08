@@ -26,7 +26,7 @@ const MusicBar = ({track_length, status=0, track_title, track_artist, cover_art,
           }
           <img onClick={next} width={"26px"} height={"26px"} src={next_icon} alt={"next"}/>
           {/* <input onChange={() => (seek())} type="range" id="seek" className="track-seek" max={track_length} min="0" value={status}></input> */}
-          <div className="player-progress">
+          <div id="player-progress" className="player-progress">
             <div id="seek" className="player-progress-filled" style={{flexBasis: "0%"}}></div>
           </div>
         </div>
