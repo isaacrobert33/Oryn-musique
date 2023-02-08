@@ -78,6 +78,8 @@ function App() {
     const [playing, setPlaying] = useState(false);
     const [playerShow, setPlayerShow] = useState(false);
     const [devices, setDevices] = useState([]);
+    const [trackURI, setURI] = useState([]);
+
     // const [duration, setDuration] = useState(0);
   
     // const getToken = () => {
@@ -115,6 +117,7 @@ function App() {
         return;
       }
       clearInterval(statusInterval);
+      currentTime = data.progress_ms;
       duration = data.item.duration_ms;
       let trackInfo = {uri: data.item.uri, cover_art: data.item.album.images[0].url, title: data.item.name, artist: data.item.artists[0].name, playing: data.is_playing};
       setPlayingTrack(trackInfo);
@@ -127,8 +130,9 @@ function App() {
       let progressValue = (currentTime/duration)*100;
       progressFilled.style.flexBasis = `${progressValue}%`;
       currentTime += 1000;
-      if (duration >= currentTime) {
-        console.log("Playing next");
+      // console.log(currentTime, duration)
+      if (duration <= currentTime) {
+        console.log("Updating music bar...");
         updateMusicBar();
       }
     }
@@ -148,6 +152,7 @@ function App() {
       progress.addEventListener("mouseup", () => (mousedown = false))
     }
 
+    
     const play = async (e, uri) => {
         let position_ms = 0;
         let {data} = await axios.get("https://api.spotify.com/v1/me/player", {
@@ -156,10 +161,12 @@ function App() {
           }
         });
         if (!uri) {
-          uri = playingTrack.uri;
+          uri = trackURI;
         }
-        if (data && uri === data.item.uri) {
-          position_ms = Number(data.progress_ms);
+        setURI(uri);
+        if (data && uri[0] === data.item.uri) {
+          console.log(currentTime, "position")
+          position_ms = data.progress_ms;
           document.getElementById("seek").value = position_ms;
         }
         
@@ -188,7 +195,6 @@ function App() {
           }
         });
         clearInterval(seekInterval);
-        document.getElementById("seek").value = data.progress_ms;
         await axios.put(
             `https://api.spotify.com/v1/me/player/pause?device_id=${deviceId}`,
             {},
@@ -202,8 +208,12 @@ function App() {
             `https://api.spotify.com/v1/me/player/next?device_id=${deviceId}`,
             {},
             {headers: {Authorization: `Bearer ${token}`}}
+        ).then(
+          response => {
+            updateMusicBar()
+          }
         )
-        document.getElementById("seek").value = "0";
+        
     }
     
     const previous = async () => {
@@ -211,16 +221,19 @@ function App() {
             `https://api.spotify.com/v1/me/player/previous?device_id=${deviceId}`,
             {},
             {headers: {Authorization: `Bearer ${token}`}}
+        ).then(
+          response => {
+            updateMusicBar()
+          }
         )
-        document.getElementById("seek").value = "0";
     }
 
     const seek = async (event) => {
         let progress = document.getElementById("seek")
-    
-        const seekTime = parseInt((event.offsetX / progress.offsetWidth) * duration);
+        console.log(progress.offsetWidth, event.offsetX)
+        const seekTime = parseInt((event.offsetX) * (duration/640));
         
-        console.log(seekTime);
+        console.log(duration, seekTime);
         await axios.put(
             `https://api.spotify.com/v1/me/player/seek?device_id=${deviceId}&position_ms=${seekTime}`,
             {},

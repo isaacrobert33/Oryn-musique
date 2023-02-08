@@ -1,4 +1,4 @@
-import  React from "react";
+import  React, { useEffect } from "react";
 import prev_icon from './assets/previous.svg';
 import next_icon from './assets/next.svg';
 import play_icon from './assets/play.svg';
@@ -9,6 +9,18 @@ const MusicBar = ({track_length, status=0, track_title, track_artist, cover_art,
       document.getElementById("device-list-overlay").style.display = "block";
       fetchDevices()
     }
+    
+    // var mousedown;
+    // useEffect(
+    //   (e) => {
+    //     let progress = document.getElementById("player-progress");
+    //     progress.addEventListener("click", seek)
+    //     progress.addEventListener("mousemove", (e) => mousedown && seek(e))
+    //     progress.addEventListener("mousedown", () => (mousedown = true))
+    //     progress.addEventListener("mouseup", () => (mousedown = false))
+
+    //   }
+    // )
     return (
       <div className="music-bar">
         <div id="track-info">
