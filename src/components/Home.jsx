@@ -47,7 +47,6 @@ const Home = ({player, device_id}) => {
 
     return (
         <div className='screen' id='home'>
-            <h1 id='recent-h'>Recents</h1>
             <div className='container'>
                 {
                     token ? (
@@ -65,9 +64,6 @@ const Home = ({player, device_id}) => {
                     )
                     
                 }
-            </div>
-            <h1>Playlists</h1>
-            <div className='container'>
                 {
                     playlists?.length > 0 ? (
                         playlists.map(

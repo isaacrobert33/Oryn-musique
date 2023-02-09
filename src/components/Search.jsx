@@ -8,15 +8,18 @@ const MusiCard = ({id, name, cover_art, link, uri, sub_info=[], play_track, canp
             {
                 canplay ? (<span className='play-btn' onClick={(e) => (play_track(e, [uri]))}>►</span>) : (<></>)
             }
-            <a className='music-card-link' href={link} target={"_blank"} rel="noreferrer">
-                <img width={"196px"} height={"196px"} src={cover_art} alt={cover_art}></img>
+            <a onClick={(e) => (play_track(e, [uri]))} className='music-card-link' target={"_blank"} rel="noreferrer">
+                <img src={cover_art} alt={cover_art}></img>
                 <b>{name}</b>
-                <br></br>
-                {sub_info.map(
-                    (artist) => (
-                        <i key={artist.id}>{artist.name} </i>
-                    )
-                )}
+                <i>
+                    {
+                        sub_info.map(
+                            (artist) => (
+                                `${artist.name}, `
+                            )
+                        )
+                    }
+                </i>
             </a>
         </div>
     )
@@ -127,6 +130,7 @@ const Search = ({player, updateStatus}) => {
         if (!results.length > 0) {
             recentSearch(recent_search);
         }
+        document.getElementById("user").style.display = "none";
     }, [results, categories])
     
     return (
