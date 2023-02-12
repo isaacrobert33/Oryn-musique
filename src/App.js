@@ -128,7 +128,7 @@ function App() {
       let progressValue = (currentTime/duration)*100;
       progressFilled.style.flexBasis = `${progressValue}%`;
       currentTime += 1000;
-      // console.log(currentTime, duration)
+      
       if (duration <= currentTime) {
         console.log("Updating music bar...");
         updateMusicBar();
@@ -227,10 +227,9 @@ function App() {
 
     const seek = async (event) => {
         let progress = document.getElementById("seek")
-        console.log(progress.offsetWidth, event.offsetX)
+        
         const seekTime = parseInt((event.offsetX) * (duration/640));
         
-        console.log(duration, seekTime);
         await axios.put(
             `https://api.spotify.com/v1/me/player/seek?device_id=${deviceId}&position_ms=${seekTime}`,
             {},
@@ -289,7 +288,6 @@ function App() {
         window.location.reload();
     }
 
-    var reloaded = false;
     const getUserData = async (token) => {
       let response;
       try {
@@ -299,11 +297,7 @@ function App() {
       } catch (error) {
         logout();
         document.getElementById("signin").click();
-        if (!reloaded) {
-          console.log("Reloaded....")
-          // window.location.reload();
-          reloaded = true;
-        }
+
         return;
       }
       
@@ -313,9 +307,8 @@ function App() {
     useEffect(() => {
         const hash = window.location.hash;
         let token = window.localStorage.getItem("token");
-        console.log("Called useEffect...", token, hash);
+        
         if (!token && hash) {
-            console.log("useEffect")
             token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1]
 
             window.location.hash = ""
