@@ -37,10 +37,12 @@ const Home = ({player, device_id}) => {
     }
 
     useEffect(() => {
-        if (!albums.length>0) {
+        token = window.localStorage.getItem("token");
+        
+        if (!albums.length>0 && token) {
             fetchAlbums();
         }
-        if (!playlists.length>0) {
+        if (!playlists.length>0 && token) {
             fetchPlaylists()
         }
     }, [albums, playlists])

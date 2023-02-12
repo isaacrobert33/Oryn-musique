@@ -62,8 +62,7 @@ var duration = 0;
 
 function App() {
     const CLIENT_ID = "f8453497694c4440b8458f0182f51618";
-    const REDIRECT_URI = "https://oryn.vercel.app";
-    // "http://localhost:3000";
+    const REDIRECT_URI = document.location.href.slice(0, -1);
     const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
     const RESPONSE_TYPE = "token"
     const SCOPES = "user-read-playback-position,user-library-read,user-read-playback-state,user-modify-playback-state,user-read-currently-playing,user-read-recently-played,user-read-playback-position,streaming,app-remote-control"
@@ -301,10 +300,10 @@ function App() {
         logout();
         document.getElementById("signin").click();
         if (!reloaded) {
-          window.location.reload();
+          console.log("Reloaded....")
+          // window.location.reload();
           reloaded = true;
         }
-       
         return;
       }
       
@@ -312,19 +311,25 @@ function App() {
     }
 
     useEffect(() => {
-        const hash = window.location.hash
+        const hash = window.location.hash;
         let token = window.localStorage.getItem("token");
-        console.log(token, hash);
+        console.log("Called useEffect...", token, hash);
         if (!token && hash) {
+            console.log("useEffect")
             token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1]
 
             window.location.hash = ""
             window.localStorage.setItem("token", token)
+            getUserData(token);
+            setToken(token);
+            startPlayback(token);
+            
+        } else if (token) {
+          getUserData(token);
+          setToken(token);
+          startPlayback(token);
         }
-        
-        getUserData(token);
-        setToken(token);
-        startPlayback(token);
+
     }, [])
     
 
