@@ -66,13 +66,12 @@ const SinglePlaylist = ({play}) => {
                         <div className='playlist-back-drop'>
                             <img width={"280px"} height={"280px"} src={playlist.images[0].url} alt={playlist.id}/>
                             <h1>{playlist.name}</h1><br></br>
-                            <span>{`${playlist.tracks.total} songs`} • {`${playlist.release_date.split("-")[0]}`}</span>
+                            <span>{`${playlist.tracks.total} songs`} {playlist.release_date ? `• ${playlist.release_date.split("-")[0]}`: ""}</span>
                         </div>
                         <div className='tracks'>
                                 <div className='tracks-heading'>
-                                    <span className='track-title'>TITLE</span>
-                                    <span className='track-artist'>ARTIST</span>
-                                    <span className='track-duration'>DURATION</span>
+                                    <span className='track-title-h'>TRACK</span>
+                                    <span className='track-duration-h'>DURATION</span>
                                 </div>
                                 
                                 <ul className="track-list">

@@ -68,10 +68,9 @@ const SingleAlbum = ({play}) => {
                             <span><b>{`${album.artists[0].name}`}</b> • {`${album.tracks.total} songs`} • {`${album.release_date.split("-")[0]}`}</span>
                         </div>
                         <div className='tracks'>
-                                <div className='tracks-heading'>
-                                    <span className='track-title'>TITLE</span>
-                                    <span className='track-artist'>ARTIST</span>
-                                    <span className='track-duration'>DURATION</span>
+                        <div className='tracks-heading'>
+                                    <span className='track-title-h'>TRACK</span>
+                                    <span className='track-duration-h'>DURATION</span>
                                 </div>
                                 
                                 <ul className="track-list">

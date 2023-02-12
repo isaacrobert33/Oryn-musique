@@ -9,9 +9,10 @@ const Track = ({id, cover_art, title, artist, duration, play_callback}) => {
             <div className='track-play'>►</div>
 
             <img width={"48px"} height={"48px"} className='track-art' src={cover_art} alt={id}></img>
-            
-            <span className='track-title'>{title}</span>
-            <span className='track-artist'>{artist}</span>
+            <div className='track-detail'>
+                <span className='track-title'><b>{title.length < 21 ? title: `${title.slice(0, 22)}...`}</b></span><br></br>
+                <span className='track-artist'>{artist}</span>
+            </div>
 
             <span className='track-duration'>{`${duration_min}:${duration_rm}`}</span>
         </li>

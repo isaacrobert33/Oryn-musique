@@ -362,7 +362,7 @@ function App() {
               <li>
                 <Link className="tabs" to="/">
                   <span>  
-                    <img src={home_icon} alt={"home"}></img>
+                    <img id="home-icon" src={home_icon} alt={"home"}></img>
                   </span>
                   <b>Home</b>
                 </Link>
@@ -371,7 +371,7 @@ function App() {
               <li>
                 <Link className="tabs" to={`/search`}>
                   <span>
-                  <img src={search_icon} alt={"search"}/>
+                  <img id="search-icon" src={search_icon} alt={"search"}/>
                   </span>
                   <b>Search</b>
                 </Link>
@@ -380,7 +380,7 @@ function App() {
               <li>
                 <Link className="tabs" to="/playlists">
                   <span>
-                    <img src={playlist_icon} alt={"playlist"}/>
+                    <img id="playlist-icon" src={playlist_icon} alt={"playlist"}/>
                   </span>
                   <b>Playlist</b>
                 </Link>
@@ -388,7 +388,7 @@ function App() {
               <li>
                 <Link className="tabs" to="/albums">
                   <span>
-                    <img src={album_icon} alt={"albums"}/> 
+                    <img id="album-icon" src={album_icon} alt={"albums"}/> 
                   </span>
                   <b>Albums</b>
                 </Link>
