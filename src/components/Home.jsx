@@ -62,7 +62,11 @@ const Home = ({player, device_id}) => {
                             <h4>Please check your internet connection</h4>
                         )
                     ) : (
-                        <h4>Please sign in your Spotify account</h4>
+                        <>
+                            <span id='cloud-err'></span>
+                            <h4>Please sign in your Spotify account</h4>
+                        </>
+                        
                     )
                     
                 }
@@ -74,7 +78,7 @@ const Home = ({player, device_id}) => {
                             )
                         )
                     ) : (
-                        <div>No recorded playlists</div>
+                        <></>
                     )
                 }
             </div>
