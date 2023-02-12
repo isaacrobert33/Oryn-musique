@@ -799,7 +799,11 @@ html, body {
     position: absolute;
     margin-left: 65%;
   }
-  
+  #track-title {
+    margin-top: 22px;
+    margin-left: 29px;
+    font-size: 13px;
+  }
   #track-title span {
     font-size: 12px;
     text-align: center;
