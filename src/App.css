@@ -192,6 +192,57 @@ html, body {
   font-weight: bold;
 }
 
+.music-card .badge {
+  font-size: 10px;
+  background-color: azure;
+  color: #f88d0e;
+  border-radius: 3px;
+  padding: 3px;
+  margin-left: 72.5%;
+  margin-top: 5px;
+  position: absolute;
+}
+
+.album-card {
+  border-radius: 10px;
+  width: 200px;
+  height: 270px;
+  background-color: rgba(53, 57, 61, 0.6);
+  background-blend-mode: lighten;
+  padding: 10px;
+  margin: 15px;
+  transition: .2s padding ease-out;
+}
+
+album-card:hover {
+  padding: 15px;
+  box-shadow: 2px 1px 7px 4px rgba(20, 20, 20, 0.6);
+}
+
+.album-card img {
+  width: 196px;
+  height: 196px;
+  border-radius: 10px;
+  border-bottom: #f88d0e 6px solid;
+}
+
+.album-card .badge {
+  font-size: 10px;
+  background-color: azure;
+  color: #f88d0e;
+  border-radius: 3px;
+  padding: 3px;
+  margin-left: 71%;
+  margin-top: 5px;
+  position: absolute;
+}
+
+.album-card a {
+  text-decoration: none;
+  color: azure;
+  font-weight: bold;
+}
+
 .album:hover {
   padding: 15px;
   box-shadow: 2px 1px 7px 4px rgba(20, 20, 20, 0.6);
@@ -285,7 +336,6 @@ html, body {
   height: 12%;
   width: 100%;
 }
-
 .status-bar {
   display: flex;
   flex-wrap: wrap;
@@ -562,7 +612,25 @@ html, body {
     transition: .2s padding ease-out;
   }
 
+  .album-card {
+    border-radius: 5px;
+    width: 100%;
+    height: 50px;
+    background-color: rgba(53, 57, 61, 0.6);
+    background-blend-mode: lighten;
+    padding: 0;
+    margin: 4px;
+    transition: .2s padding ease-out;
+  }
+
   .music-card img {
+    width: 50px;
+    height: 50px;
+    border-bottom: 0;
+    border-radius: 5px;
+  }
+
+  .album-card img {
     width: 50px;
     height: 50px;
     border-bottom: 0;
@@ -573,7 +641,22 @@ html, body {
     position: absolute;
     margin-left: 5px;
   }
+
+  .album-card b {
+    position: absolute;
+    margin-left: 5px;
+  }
+
   .music-card i {
+    position: absolute;
+    margin-top: 28px;
+    margin-left: 5px;
+    color: rgba(240, 255, 255, 0.5);
+    font-size: 14px;
+    font-weight: lighter;
+  }
+
+  .album-card i {
     position: absolute;
     margin-top: 28px;
     margin-left: 5px;
@@ -591,6 +674,7 @@ html, body {
     padding: 0;
     text-align: left;
     margin-top: 5%;
+    margin-bottom: 70px;
   }
 
   #search h2 {
@@ -837,6 +921,11 @@ html, body {
     flex: 0;
     flex-basis: 0%;
     border-radius: 25px;
+  }
+
+  .music-card:hover {
+    padding: 10px;
+    box-shadow: none;
   }
 
 }

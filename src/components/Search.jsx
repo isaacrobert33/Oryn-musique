@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import search_icon from './assets/search-noir.svg';
+import AlbumCard from './AlbumCard';
 
 const MusiCard = ({id, name, cover_art, link, uri, sub_info=[], play_track, canplay=true}) => {
     return (
@@ -8,7 +9,7 @@ const MusiCard = ({id, name, cover_art, link, uri, sub_info=[], play_track, canp
             {
                 canplay ? (<span className='play-btn' onClick={(e) => (play_track(e, [uri]))}>►</span>) : (<></>)
             }
-            <a onClick={(e) => (play_track(e, [uri]))} className='music-card-link' target={"_blank"} rel="noreferrer">
+            <a onClick={(e) => (play_track(e, [uri]))} className='music-card-link' rel="noreferrer">
                 <img src={cover_art} alt={cover_art}></img>
                 <b>{name}</b>
                 <i>
@@ -20,6 +21,7 @@ const MusiCard = ({id, name, cover_art, link, uri, sub_info=[], play_track, canp
                         )
                     }
                 </i>
+                <span className='badge'>{"Track"}</span>
             </a>
         </div>
     )
@@ -51,7 +53,7 @@ const Search = ({player, updateStatus}) => {
                 Authorization: `Bearer ${token}`
             },
             params: {
-                type: "track",
+                type: "track,album",
                 q: q,
                 limit: 4
             }
@@ -84,23 +86,26 @@ const Search = ({player, updateStatus}) => {
                 Authorization: `Bearer ${token}`
             },
             params: {
-                type: "track",
+                type: "album,track",
                 q: keyword,
-                limit: 10,
+                limit: 8,
                 offset: search_offset
             }
-        });
+        }).then(
+            response => {
+                let result_data = [...response.data.tracks.items, ...response.data.albums.items];
+                console.log(result_data);
+                setResults(result_data);
+                setTotal(response.data.tracks.total+response.data.albums.total);
 
-        window.localStorage.setItem("recent_search", keyword);
+                if (offset < data.tracks.total) {
+                    setHas(true);
+                } else {
+                    setHas(false);
+                }
+            }
+        )
 
-        setResults(data.tracks.items)
-        setTotal(data.tracks.total);
-
-        if (offset < data.tracks.total) {
-            setHas(true);
-        } else {
-            setHas(false);
-        }
     }
 
     function navBack() {
@@ -164,7 +169,11 @@ const Search = ({player, updateStatus}) => {
                     results?.length > 0 ? (
                         results.map(
                             (res) => (
-                                <MusiCard key={res.id} id={res.id} name={res.name} sub_info={res.artists} cover_art={res.album.images[0].url} uri={res.uri} play_track={player}/>
+                                res.type == "track" ? (
+                                    <MusiCard key={res.id} id={res.id} name={res.name.length < 22 ? res.name : `${res.name.slice(0, 23)}...`} sub_info={res.artists} cover_art={res.album.images[0].url} uri={res.uri} play_track={player}/>
+                                ) : (
+                                    <AlbumCard key={res.id} id={res.id} name={res.name.length < 22 ? res.name : `${res.name.slice(0, 23)}...`} cover_art={res.images[0].url} link={`/album/${res.id}`} artists={res.artists}/>
+                                )
                             )
                         )
                         
@@ -180,6 +189,7 @@ const Search = ({player, updateStatus}) => {
                         categories.map(
                             (catg) => (
                                 <MusiCard key={catg.id} id={catg.id} name={catg.name} cover_art={catg.icons[0].url} link={catg.href} canplay={false}/>
+                                
                             )
                         )
                     ) : (
