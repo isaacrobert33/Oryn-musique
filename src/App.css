@@ -193,14 +193,7 @@ html, body {
 }
 
 .music-card .badge {
-  font-size: 10px;
-  background-color: azure;
-  color: #f88d0e;
-  border-radius: 3px;
-  padding: 3px;
-  margin-left: 72.5%;
-  margin-top: 5px;
-  position: absolute;
+  display: none;
 }
 
 .album-card {
@@ -227,14 +220,7 @@ album-card:hover {
 }
 
 .album-card .badge {
-  font-size: 10px;
-  background-color: azure;
-  color: #f88d0e;
-  border-radius: 3px;
-  padding: 3px;
-  margin-left: 71%;
-  margin-top: 5px;
-  position: absolute;
+  display: none;
 }
 
 .album-card a {
@@ -612,6 +598,29 @@ album-card:hover {
     transition: .2s padding ease-out;
   }
 
+  .music-card .badge {
+    font-size: 10px;
+    background-color: azure;
+    color: #f88d0e;
+    border-radius: 3px;
+    padding: 3px;
+    margin-left: 75%;
+    margin-top: 5px;
+    position: absolute;
+    display: inline-block;
+  }
+  .album-card .badge {
+    font-size: 10px;
+    background-color: azure;
+    color: #f88d0e;
+    border-radius: 3px;
+    padding: 3px;
+    margin-left: 74%;
+    margin-top: 5px;
+    position: absolute;
+    display: inline-block;
+  }
+
   .album-card {
     border-radius: 5px;
     width: 100%;
@@ -621,6 +630,14 @@ album-card:hover {
     padding: 0;
     margin: 4px;
     transition: .2s padding ease-out;
+  }
+
+  .album-card:hover {
+    padding: 0;
+  }
+
+  .music-card:hover {
+    padding: 0;
   }
 
   .music-card img {
@@ -664,6 +681,7 @@ album-card:hover {
     font-size: 14px;
     font-weight: lighter;
   }
+
 
   .play-btn {
     display: none;
@@ -921,11 +939,6 @@ album-card:hover {
     flex: 0;
     flex-basis: 0%;
     border-radius: 25px;
-  }
-
-  .music-card:hover {
-    padding: 10px;
-    box-shadow: none;
   }
 
 }
